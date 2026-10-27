@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة التمريض الذكية V7 - Future Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    body {
+      background-color: #030408;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* شبكة ليزر خلفية مستقبلية (Sci-Fi Grid) */
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+      background-size: 30px 30px;
+      z-index: 0;
+    }
+
+    /* إضاءات نيون متحركة خلف الكارت */
+    .cyber-glow {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      filter: blur(140px);
+      z-index: 0;
+      opacity: 0.35;
+      animation: neonPulse 5s infinite alternate ease-in-out;
+    }
+    .glow-cyan { background: #00f3ff; top: 10%; left: 10%; }
+    .glow-purple { background: #b000ff; bottom: 10%; right: 10%; animation-delay: -2.5s; }
+
+    @keyframes neonPulse {
+      0% { transform: scale(0.9); opacity: 0.25; }
+      100% { transform: scale(1.15); opacity: 0.45; }
+    }
+
+    /* الكارت الرئيسي بتصميم زجاجي مستقبلي */
+    .main-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 580px;
+      background: rgba(8, 12, 22, 0.85);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(0, 243, 255, 0.2);
+      border-radius: 28px;
+      padding: 45px;
+      box-shadow: 0 0 50px rgba(0, 243, 255, 0.15), inset 0 0 20px rgba(0, 243, 255, 0.05);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+
+    /* تأثير خط السكنر الضوئي (Laser Scanner Effect) في البداية */
+    .main-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00f3ff, #b000ff, transparent);
+      animation: scannerBeam 3s infinite linear;
+    }
+
+    @keyframes scannerBeam {
+      0% { transform: translateY(-100%); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(600px); opacity: 0; }
+    }
+
+    /* الأركان والزوايا المستقبلية */
+    .corner {
+      position: absolute;
+      width: 45px;
+      height: 45px;
+      border-color: #00f3ff;
+      border-style: solid;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+    .top-right { 
+      top: 15px; 
+      right: 15px; 
+      border-width: 2px 2px 0 0; 
+      border-top-right-radius: 10px; 
+    }
+    .bottom-left { 
+      bottom: 15px; 
+      left: 15px; 
+      border-width: 0 0 2px 2px; 
+      border-bottom-left-radius: 10px; 
+    }
+
+    .main-card.opened .top-right { transform: translate(14px, -14px); border-color: #b000ff; }
+    .main-card.opened .bottom-left { transform: translate(-14px, 14px); border-color: #b000ff; }
+
+    /* زر الأدمن المستقبلي فوق على اليمين */
+    .admin-trigger-btn {
+      position: absolute;
+      top: 18px;
+      left: 20px;
+      background: rgba(0, 243, 255, 0.05);
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      color: #00f3ff;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .admin-trigger-btn:hover {
+      background: #00f3ff;
+      color: #000;
+      box-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
+    }
+
+    .screen {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      text-align: center;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .hidden { display: none !important; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 auto;
+      padding: 6px 16px;
+      background: rgba(0, 243, 255, 0.1);
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      border-radius: 20px;
+      color: #00f3ff;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+    }
+
+    h1, h2 { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
+    p { font-size: 13px; color: #94a3b8; line-height: 1.6; }
+
+    /* التوقيع بتصميم نيون شيك جداً */
+    .signature-box {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .signature-box h4 {
+      font-size: 13px;
+      color: #00f3ff;
+      font-weight: 800;
+      text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+      letter-spacing: 1px;
+    }
+    .signature-box span {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    /* الأزرار النيون الخطيرة */
+    .btn {
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #00f3ff 0%, #0066ff 100%);
+      color: #000;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 10px 30px rgba(0, 243, 255, 0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 15px 35px rgba(0, 243, 255, 0.6); 
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(0, 243, 255, 0.25);
+      border-radius: 12px;
+      color: #fff;
+      font-family: 'Cairo', sans-serif;
+      outline: none;
+      font-size: 13px;
+      transition: 0.3s;
+    }
+    select:focus, input:focus {
+      border-color: #00f3ff;
+      box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+    }
+
+    /* شبكة أقسام المواد */
+    .subjects-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      max-height: 270px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .subject-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 12px;
+      text-align: right;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .subject-card:hover {
+      border-color: #00f3ff;
+      background: rgba(0, 243, 255, 0.05);
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+    }
+    .subject-card h3 { font-size: 12px; color: #00f3ff; margin-bottom: 4px; }
+    .subject-card span { font-size: 10px; color: #94a3b8; }
+
+    .sub-btn {
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+    .sub-btn:hover { background: #00f3ff; color: #000; }
+
+    .delete-btn {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #f87171;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+    .delete-btn:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .back-link {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: underline;
+      margin-top: 5px;
+    }
+    .back-link:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+  <div class="cyber-glow glow-cyan"></div>
+  <div class="cyber-glow glow-purple"></div>
+
+  <div class="main-card" id="mainCard">
+    <!-- زر الأدمن الصغير فوق على اليمين -->
+    <button class="admin-trigger-btn" onclick="openAdminLogin()">⚙️ الآدمن</button>
+
+    <!-- السهمين المتجاورتين (بتصميم مستقبلي) -->
+    <div class="corner top-right"></div>
+    <div class="corner bottom-left"></div>
+
+    <!-- الشاشة الأولى: دخول الطلاب (المستقبلية) -->
+    <div class="screen" id="welcomeScreen">
+      <div class="badge">🌐 SYSTEM V7 // QUANTUM CORE</div>
+      <h1>مرحباً بكم في منصة التمريض الذكية</h1>
+      <p>تفعيل بروتوكول العرض الأكاديمي التفاعلي للمحاضرات والملفات.</p>
+      
+      <button class="btn" onclick="openStudentDashboard()">
+        <span>تشغيل لوحة الطلاب</span>
+        <span>⚡</span>
+      </button>
+
+      <div class="signature-box">
+        <h4>By Mostafa Wahed</h4>
+        <span>We wish you success ✨</span>
+      </div>
+    </div>
+
+    <!-- شاشة تسجيل دخول الأدمن -->
+    <div class="screen hidden" id="adminLoginScreen">
+      <div class="badge">🔒 SECURE ADMIN GATEWAY</div>
+      <h2>أدخل كود الوصول الرئيسي (PIN)</h2>
+      <input type="password" id="adminPasswordInput" placeholder="أدخل الباسورد...">
+      <button class="btn" onclick="verifyAdminPassword()">فك تشفير النظام</button>
+      <button class="back-link" onclick="backToWelcome()">إلغاء والعودة للرئيسية</button>
+    </div>
+
+    <!-- لوحة تحكم الأدمن -->
+    <div class="screen hidden" id="adminDashboardScreen">
+      <div class="badge">⚙️ ADMIN COMMAND CENTER</div>
+      
+      <div style="display: flex; flex-direction: column; gap: 12px; text-align: right; max-height: 380px; overflow-y: auto; padding-left: 5px;">
+        <!-- رفع ملف -->
+        <div>
+          <label style="font-size: 12px; color: #00f3ff; display: block; margin-bottom: 5px;">رفع ملف PDF جديد:</label>
+          <select id="adminSubjectSelect"></select>
+          <input type="file" id="adminPdfFile" accept=".pdf" style="margin-top: 8px;">
+          <button class="btn" style="margin-top: 8px; padding: 10px; background: linear-gradient(135deg, #00f3ff 0%, #0066ff 100%); color:#000;" onclick="uploadFileByAdmin()">رفع الملف للشبكة</button>
+        </div>
+
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 5px 0;">
+
+        <!-- إدارة وحذف الملفات المرفوعة -->
+        <div>
+          <label style="font-size: 12px; color: #ef4444; display: block; margin-bottom: 5px;">🗑️ إدارة وحذف الملفات المرفوعة:</label>
+          <select id="adminManageSubjectSelect" onchange="renderAdminFileList()"></select>
+          <div id="adminFileListContainer" style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 5px 0;">
+
+        <!-- إضافة مادة جديدة -->
+        <div>
+          <label style="font-size: 12px; color: #00f3ff; display: block; margin-bottom: 5px;">إضافة مادة دراسية جديدة:</label>
+          <input type="text" id="newSubjectName" placeholder="اكتب اسم المادة الجديدة...">
+          <button class="sub-btn" style="margin-top: 8px; width: 100%; background: #00f3ff; color: #000;" onclick="addNewSubject()">إضافة المادة فوراً</button>
+        </div>
+
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 5px 0;">
+
+        <!-- تغيير باسورد الأدمن -->
+        <div>
+          <label style="font-size: 12px; color: #00f3ff; display: block; margin-bottom: 5px;">تغيير كود مرور الآدمن:</label>
+          <input type="password" id="newAdminPassword" placeholder="الكود الجديد...">
+          <button class="sub-btn" style="margin-top: 8px; width: 100%; background: #10b981; color: #000;" onclick="changeAdminPassword()">تحديث الكود</button>
+        </div>
+      </div>
+
+      <button class="back-link" onclick="backToWelcome()" style="margin-top: 10px;">قطع الاتصال (تسجيل خروج)</button>
+    </div>
+
+    <!-- صفحة الطلاب وأقسام المواد -->
+    <div class="screen hidden" id="studentScreen">
+      <div class="badge">📚 النطاق الأكاديمي // المواد</div>
+      <h2>اختر المادة الدراسية المطلوبة</h2>
+      
+      <div class="subjects-grid" id="subjectsGrid"></div>
+
+      <button class="back-link" onclick="backToWelcome()">العودة للرئيسية</button>
+    </div>
+
+    <!-- شاشة عرض ملفات المادة -->
+    <div class="screen hidden" id="materialScreen">
+      <h2 id="currentSubjectTitle">اسم المادة</h2>
+      <p>الملفات والمستندات المتاحة للتحميل والمعاينة:</p>
+      
+      <div class="subjects-grid" id="fileListContainer" style="grid-template-columns: 1fr;"></div>
+
+      <button class="sub-btn" onclick="backToSubjects()" style="margin: 0 auto; width: 150px;">الرجوع للمواد</button>
+    </div>
+
+  </div>
+
+  <script>
+    let adminPass = "1752008";
+
+    let subjectsData = {
+      "Anatomy Theory": { files: [] },
+      "Anatomy Clinical": { files: [] },
+      "English": { files: [] },
+      "Fundamental Nursing Theory": { files: [] },
+      "Fundamental Nursing clinical": { files: [] },
+      "Health assessment Theory": { files: [] },
+      "Health assessment clinical": { files: [] },
+      "IT": { files: [] },
+      "Medical Terminology": { files: [] },
+      "Physiology": { files: [] },
+      "Ethics": { files: [] }
+    };
+
+    function openStudentDashboard() {
+      const card = document.getElementById('mainCard');
+      card.classList.add('opened');
+
+      setTimeout(() => {
+        document.getElementById('welcomeScreen').classList.add('hidden');
+        document.getElementById('studentScreen').classList.remove('hidden');
+        renderSubjects();
+      }, 300);
+    }
+
+    function openAdminLogin() {
+      const card = document.getElementById('mainCard');
+      card.classList.add('opened');
+
+      setTimeout(() => {
+        document.getElementById('welcomeScreen').classList.add('hidden');
+        document.getElementById('adminDashboardScreen').classList.add('hidden');
+        document.getElementById('adminLoginScreen').classList.remove('hidden');
+      }, 300);
+    }
+
+    function verifyAdminPassword() {
+      const input = document.getElementById('adminPasswordInput').value;
+      if (input === adminPass) {
+        document.getElementById('adminLoginScreen').classList.add('hidden');
+        document.getElementById('adminDashboardScreen').classList.remove('hidden');
+        updateAdminSelects();
+        document.getElementById('adminPasswordInput').value = '';
+      } else {
+        alert('كود الدخول غير صحيح!');
+      }
+    }
+
+    function backToWelcome() {
+      const card = document.getElementById('mainCard');
+      card.classList.remove('opened');
+      document.getElementById('welcomeScreen').classList.remove('hidden');
+      document.getElementById('adminLoginScreen').classList.add('hidden');
+      document.getElementById('adminDashboardScreen').classList.add('hidden');
+      document.getElementById('studentScreen').classList.add('hidden');
+      document.getElementById('materialScreen').classList.add('hidden');
+    }
+
+    function updateAdminSelects() {
+      const selectUpload = document.getElementById('adminSubjectSelect');
+      const selectManage = document.getElementById('adminManageSubjectSelect');
+      
+      selectUpload.innerHTML = '';
+      selectManage.innerHTML = '';
+
+      for (let sub in subjectsData) {
+        selectUpload.innerHTML += `<option value="${sub}">${sub}</option>`;
+        selectManage.innerHTML += `<option value="${sub}">${sub}</option>`;
+      }
+
+      renderAdminFileList();
+    }
+
+    function uploadFileByAdmin() {
+      const select = document.getElementById('adminSubjectSelect');
+      const fileInput = document.getElementById('adminPdfFile');
+      const subjectName = select.value;
+
+      if (fileInput.files.length === 0) {
+        alert('اختر ملف PDF أولاً!');
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const fileUrl = URL.createObjectURL(file);
+
+      subjectsData[subjectName].files.push({
+        name: file.name,
+        url: fileUrl
+      });
+
+      alert('تم رفع الملف بنجاح إلى مادة ' + subjectName + '!');
+      fileInput.value = '';
+      renderAdminFileList();
+    }
+
+    function renderAdminFileList() {
+      const selectManage = document.getElementById('adminManageSubjectSelect');
+      const container = document.getElementById('adminFileListContainer');
+      const subjectName = selectManage.value;
+
+      if (!subjectName || !subjectsData[subjectName]) return;
+
+      const files = subjectsData[subjectName].files;
+      container.innerHTML = '';
+
+      if (files.length === 0) {
+        container.innerHTML = '<div style="color: #64748b; font-size: 11px; text-align: center;">لا توجد ملفات مرفوعة في هذه المادة.</div>';
+        return;
+      }
+
+      files.forEach((f, index) => {
+        container.innerHTML += `
+          <div style="background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(0, 243, 255, 0.1);">
+            <span style="font-size: 12px; color: #e2e8f0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px;">📄 ${f.name}</span>
+            <button class="delete-btn" onclick="deleteFile('${subjectName}', ${index})">حذف 🗑️</button>
+          </div>
+        `;
+      });
+    }
+
+    function deleteFile(subjectName, fileIndex) {
+      if (confirm('هل أنت تأكد من إزالة هذا الملف؟')) {
+        subjectsData[subjectName].files.splice(fileIndex, 1);
+        renderAdminFileList();
+        alert('تم حذف الملف بنجاح!');
+      }
+    }
+
+    function addNewSubject() {
+      const input = document.getElementById('newSubjectName');
+      const newSub = input.value.trim();
+
+      if (!newSub) {
+        alert('اكتب اسم المادة الجديدة!');
+        return;
+      }
+
+      if (subjectsData[newSub]) {
+        alert('هذه المادة موجودة بالفعل!');
+        return;
+      }
+
+      subjectsData[newSub] = { files: [] };
+      input.value = '';
+      updateAdminSelects();
+      alert('تم إضافة المادة بنجاح وتظهر الآن للطلاب!');
+    }
+
+    function changeAdminPassword() {
+      const input = document.getElementById('newAdminPassword');
+      const newP = input.value.trim();
+
+      if (!newP) {
+        alert('اكتب الكود الجديد!');
+        return;
+      }
+
+      adminPass = newP;
+      input.value = '';
+      alert('تم تحديث كود مرور الآدمن بنجاح!');
+    }
+
+    function renderSubjects() {
+      const grid = document.getElementById('subjectsGrid');
+      grid.innerHTML = '';
+
+      for (let sub in subjectsData) {
+        const count = subjectsData[sub].files.length;
+        grid.innerHTML += `
+          <div class="subject-card" onclick="openSubject('${sub}')">
+            <h3>📚 ${sub}</h3>
+            <div style="font-size: 11px; color: #00f3ff; margin-top: 6px;">📄 ${count} ملفات متاحة</div>
+          </div>
+        `;
+      }
+    }
+
+    function openSubject(subName) {
+      document.getElementById('currentSubjectTitle').innerText = subName;
+      const sub = subjectsData[subName];
+      const container = document.getElementById('fileListContainer');
+      container.innerHTML = '';
+
+      if (sub.files.length === 0) {
+        container.innerHTML = '<div style="color: #64748b; font-size: 13px; padding: 20px; text-align: center;">لا توجد ملفات مرفوعة لهذه المادة حتى الآن.</div>';
+      } else {
+        sub.files.forEach(f => {
+          container.innerHTML += `
+            <div style="background: rgba(255,255,255,0.03); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(0, 243, 255, 0.1);">
+              <span>📄 ${f.name}</span>
+              <a href="${f.url}" target="_blank" style="background: #00f3ff; color: #000; padding: 6px 12px; border-radius: 8px; text-decoration: none; font-size: 12px; font-weight: 700;">تحميل / معاينة</a>
+            </div>
+          `;
+        });
+      }
+
+      document.getElementById('studentScreen').classList.add('hidden');
+      document.getElementById('materialScreen').classList.remove('hidden');
+    }
+    function backToSubjects() {
+      document.getElementById('materialScreen').classList.add('hidden');
+      document.getElementById('studentScreen').classList.remove('hidden');
+    }
+  </script>
+
+</body>
+</html>
